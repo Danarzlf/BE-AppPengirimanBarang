@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const { generatedOTP } = require("../utils/otpGenerator");
 const nodemailer = require("../utils/nodemailer");
-const User = require("../models/User");
+const User = require("../models/user");
 const UserProfile = require("../models/UserProfile");
 
 
