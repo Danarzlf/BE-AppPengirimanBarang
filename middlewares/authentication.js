@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/User"); // Sesuaikan path ke model User Mongoose Anda
+const User = require("../models/user"); // Sesuaikan path ke model User Mongoose Anda
 const { JWT_SECRET_KEY } = process.env;
 
 module.exports = async function (req, res, next) {
