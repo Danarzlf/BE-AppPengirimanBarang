@@ -6,6 +6,7 @@ const corsConfig = {
   credential: true,
   methods: ["GET", "POST", "PUT", "DELETE"].
 };
+app.options("", cors(corsConfig));
 app.use(cors(corsConfig));
 const morgan = require("morgan");
 const mongoose = require("mongoose");
