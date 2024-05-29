@@ -1,6 +1,12 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const corsConfig = {
+  origin: "*",
+  credential: true,
+  methods: ["GET", "POST", "PUT", "DELETE"].
+};
+app.use(cors(corsConfig));
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const userRoute = require("./routes/user.routes");
