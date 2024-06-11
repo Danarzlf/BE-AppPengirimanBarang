@@ -1,6 +1,6 @@
 const path = require("path");
 const User = require("../models/user");
-const UserProfile = require("../models/userprofile");
+const UserProfile = require("../models/userProfile");
 
 module.exports = {
   // Controller to update user profile information

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const Shipment = require("../models/Shipment");
-const User = require("../models/User");
-const Sender = require("../models/Sender");
+const Shipment = require("../models/shipment");
+const User = require("../models/user");
+const Sender = require("../models/sender");
 
 const createShipment = async (req, res, next) => {
     try {
