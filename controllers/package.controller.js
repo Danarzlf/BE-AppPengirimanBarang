@@ -11,7 +11,6 @@ const createPackage = async (req, res, next) => {
       weight,
       height,
       width,
-      length,
       remarks,
       shipmentId,
     } = req.body;
@@ -44,7 +43,6 @@ const createPackage = async (req, res, next) => {
       weight,
       height,
       width,
-      length,
       remarks,
       shipmentId,
     });
