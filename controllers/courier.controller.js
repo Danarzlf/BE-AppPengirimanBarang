@@ -3,24 +3,14 @@ const Shipment = require("../models/shipment");
 
 const createCourier = async (req, res, next) => {
   try {
-    const { name, phoneNumber, vehicleType, licensePlate, shipmentId } =
+    const { name, phoneNumber, vehicleType, licensePlate} =
       req.body;
 
     // Validate required fields
-    if (!shipmentId || !name || !phoneNumber) {
+    if (!name || !phoneNumber) {
       return res.status(400).json({
         status: false,
         message: "Shipment ID, name, and phone number are required.",
-        data: null,
-      });
-    }
-
-    // Check if shipment exists
-    const existingShipment = await Shipment.findById(shipmentId);
-    if (!existingShipment) {
-      return res.status(404).json({
-        status: false,
-        message: "Shipment not found.",
         data: null,
       });
     }
@@ -31,7 +21,6 @@ const createCourier = async (req, res, next) => {
       phoneNumber,
       vehicleType,
       licensePlate,
-      shipmentId,
     });
 
     res.status(201).json({
@@ -57,19 +46,6 @@ const updateCourier = async (req, res, next) => {
         message: "Courier not found.",
         data: null,
       });
-    }
-
-    // Periksa apakah ada perubahan yang diminta pada pengiriman terkait
-    if (updateData.shipmentId) {
-      // Periksa apakah pengiriman yang diminta ada
-      const existingShipment = await Shipment.findById(updateData.shipmentId);
-      if (!existingShipment) {
-        return res.status(404).json({
-          status: false,
-          message: "Shipment not found.",
-          data: null,
-        });
-      }
     }
 
     // Lakukan pembaruan pada kurir
