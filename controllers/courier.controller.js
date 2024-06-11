@@ -1,5 +1,5 @@
-const Courier = require('../models/Courier');
-const Shipment = require('../models/Shipment');
+const Courier = require('../models/courier');
+const Shipment = require('../models/shipment');
 
 
 const createCourier = async (req, res, next) => {

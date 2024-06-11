@@ -1,5 +1,5 @@
-const Recipient = require('../models/Recipient');
-const Shipment = require('../models/Shipment'); 
+const Recipient = require('../models/recipient');
+const Shipment = require('../models/shipment'); 
 
 const createRecipient = async (req, res, next) => {
     try {
