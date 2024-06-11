@@ -3,9 +3,8 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const { generatedOTP } = require("../utils/otpGenerator");
 const nodemailer = require("../utils/nodemailer");
-const User = require("../models/user");
-const UserProfile = require("../models/userprofile");
-
+const User = require("../models/User");
+const UserProfile = require("../models/UserProfile");
 
 const { JWT_SECRET_KEY } = process.env;
 
@@ -110,6 +109,107 @@ const register = async (req, res, next) => {
     // Send email verification OTP
     const html = await nodemailer.getHtml("verify-otp.ejs", { email, otp });
     await nodemailer.sendEmail(email, "Email Activation", html);
+
+    res.status(201).json({
+      status: true,
+      message: "Registration successful",
+      data: { newUser, newUserProfile },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const registerNoVerify = async (req, res, next) => {
+  try {
+    let { fullName, email, phoneNumber, password, role } = req.body;
+    // const passwordValidator =
+    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,12}$/;
+    const emailValidator = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Validate required fields
+    if (!fullName || !email || !phoneNumber || !password) {
+      return res.status(400).json({
+        status: false,
+        message: "All fields are required.",
+        data: null,
+      });
+    }
+
+    // Validate full name length
+    if (fullName.length > 50) {
+      return res.status(400).json({
+        status: false,
+        message: "Invalid full name length. It must be at most 50 characters.",
+        data: null,
+      });
+    }
+
+     // Check for existing user with the same email
+     const existingUser = await User.findOne({ email });
+     if (existingUser) {
+       return res.status(409).json({
+         status: false,
+         message: 'Email already exists',
+         data: null,
+       });
+     }
+ 
+     // Check for existing user profile with the same phone number
+     const existingPhoneNumber = await UserProfile.findOne({ phoneNumber });
+     if (existingPhoneNumber) {
+       return res.status(409).json({
+         status: false,
+         message: 'Phone number already exists',
+         data: null,
+       });
+     }
+     
+    // Validate email format
+    if (!emailValidator.test(email)) {
+      return res.status(400).json({
+        status: false,
+        message: "Invalid email format.",
+        data: null,
+      });
+    }
+
+    // Validate phone number format
+    if (!/^\d+$/.test(phoneNumber)) {
+      return res.status(400).json({
+        status: false,
+        message:
+          "Invalid phone number format. It must contain only numeric characters.",
+        data: null,
+      });
+    }
+
+    // Validate phone number length
+    if (phoneNumber.length < 10 || phoneNumber.length > 12) {
+      return res.status(400).json({
+        status: false,
+        message:
+          "Invalid phone number length. It must be between 10 and 12 characters.",
+        data: null,
+      });
+    }
+
+    // Encrypt user password
+    const encryptedPassword = await bcrypt.hash(password, 10);
+
+    // Create new user record
+    const newUser = await User.create({
+      email,
+      password: encryptedPassword,
+      role,
+    });
+
+    // Create new user profile record
+    const newUserProfile = await UserProfile.create({
+      fullName,
+      phoneNumber,
+      userId: newUser._id, // Use _id for MongoDB
+    });
 
     res.status(201).json({
       status: true,
@@ -229,14 +329,14 @@ const verifyOtp = async (req, res, next) => {
         });
       }
   
-      // Return error if the user account is not verified
-      if (!user.isVerified) {
-        return res.status(403).json({
-          status: false,
-          message: "Account not verified. Please check your email!",
-          data: null,
-        });
-      }
+      // // Return error if the user account is not verified
+      // if (!user.isVerified) {
+      //   return res.status(403).json({
+      //     status: false,
+      //     message: "Account not verified. Please check your email!",
+      //     data: null,
+      //   });
+      // }
   
       // Generate JWT token for authentication
       let token = jwt.sign({ id: user._id }, JWT_SECRET_KEY);
@@ -340,8 +440,6 @@ const verifyOtp = async (req, res, next) => {
       next(err);
     }
   };
-
-
   
   const getUserById = async (req, res, next) => {
     try {
@@ -358,6 +456,14 @@ const verifyOtp = async (req, res, next) => {
           }
         },
         { $unwind: { path: "$userProfile", preserveNullAndEmptyArrays: true } },
+        { 
+          $lookup: {
+              from: "shipments", // Ganti dengan nama koleksi yang sesuai
+              localField: "_id",
+              foreignField: "userId",
+              as: "shipments"
+          }
+      },
       ]);
   
       if (userWithProfile.length === 0) {
@@ -412,6 +518,7 @@ const verifyOtp = async (req, res, next) => {
 
 module.exports = {
     register,
+    registerNoVerify,
     verifyOtp,
     login,
     authenticateUser,
