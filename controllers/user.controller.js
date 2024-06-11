@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const { generatedOTP } = require("../utils/otpGenerator");
 const nodemailer = require("../utils/nodemailer");
-const User = require("../models/user");
-const UserProfile = require("../models/userprofile");
+const User = require("../models/User");
+const UserProfile = require("../models/UserProfile");
 
 const { JWT_SECRET_KEY } = process.env;
 

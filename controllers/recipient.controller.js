@@ -1,34 +1,34 @@
-const Sender = require('../models/Sender');
+const Recipient = require('../models/Recipient');
 const Shipment = require('../models/Shipment'); 
 
-const createSender = async (req, res, next) => {
+const createRecipient = async (req, res, next) => {
     try {
-        const { name, phoneNumber, originCity, postCode, address, shipmentId, dropOffId } = req.body;
+        const { name, phoneNumber, destinationCity, postCode, address, shipmentId, dropOffId } = req.body;
 
         // Validate required fields
         if (!shipmentId || !name || !phoneNumber) {
             return res.status(400).json({
                 status: false,
-                message: "shipment ID, name, and phone number are required.",
+                message: "Shipment ID, name, and phone number are required.",
                 data: null,
             });
         }
 
-        // Check if user exists
-        const existingUser = await Shipment.findById(shipmentId);
-        if (!existingUser) {
+        // Check if shipment exists
+        const existingShipment = await Shipment.findById(shipmentId);
+        if (!existingShipment) {
             return res.status(404).json({
                 status: false,
-                message: "shipment not found.",
+                message: "Shipment not found.",
                 data: null,
             });
         }
 
-        // Create new sender record
-        const newSender = await Sender.create({
+        // Create new recipient record
+        const newRecipient = await Recipient.create({
             name,
             phoneNumber,
-            originCity,
+            destinationCity,
             postCode,
             address,
             shipmentId,
@@ -37,8 +37,8 @@ const createSender = async (req, res, next) => {
 
         res.status(201).json({
             status: true,
-            message: "Sender created successfully",
-            data: newSender,
+            message: "Recipient created successfully",
+            data: newRecipient,
         });
 
     } catch (err) {
@@ -46,17 +46,17 @@ const createSender = async (req, res, next) => {
     }
 };
 
-const updateSender = async (req, res, next) => {
+const updateRecipient = async (req, res, next) => {
     try {
-        const senderId = req.params.senderId; // Mengambil ID pengirim dari parameter rute
+        const recipientId = req.params.recipientId; // Mengambil ID penerima dari parameter rute
         const updateData = req.body; // Data baru untuk diperbarui
 
-        // Periksa apakah pengirim ada
-        const existingSender = await Sender.findById(senderId);
-        if (!existingSender) {
+        // Periksa apakah penerima ada
+        const existingRecipient = await Recipient.findById(recipientId);
+        if (!existingRecipient) {
             return res.status(404).json({
                 status: false,
-                message: "Sender not found.",
+                message: "Recipient not found.",
                 data: null,
             });
         }
@@ -74,13 +74,13 @@ const updateSender = async (req, res, next) => {
             }
         }
 
-        // Lakukan pembaruan pada pengirim
-        const updatedSender = await Sender.findByIdAndUpdate(senderId, updateData, { new: true });
+        // Lakukan pembaruan pada penerima
+        const updatedRecipient = await Recipient.findByIdAndUpdate(recipientId, updateData, { new: true });
 
         res.status(200).json({
             status: true,
-            message: "Sender updated successfully",
-            data: updatedSender,
+            message: "Recipient updated successfully",
+            data: updatedRecipient,
         });
     } catch (err) {
         next(err);
@@ -88,6 +88,6 @@ const updateSender = async (req, res, next) => {
 };
 
 module.exports = {
-    createSender,
-    updateSender,
+    createRecipient,
+    updateRecipient,
 };

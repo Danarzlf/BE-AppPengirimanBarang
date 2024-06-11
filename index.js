@@ -7,6 +7,8 @@ const userRoute = require("./routes/user.routes");
 const userProfileRoute = require("./routes/userProfile.routes");
 const shipmentRoute = require("./routes/shipment.routes");
 const senderRoute = require("./routes/sender.routes");
+const courierRoute = require("./routes/courier.routes");
+const recipientRoute = require("./routes/recipient.routes");
 
 const app = express();
 
@@ -22,6 +24,8 @@ app.use("/api/v1/users", userRoute);
 app.use("/api/v1/user-profiles", userProfileRoute);
 app.use("/api/v1/shipments", shipmentRoute);
 app.use("/api/v1/senders", senderRoute);
+app.use("/api/v1/couriers", courierRoute);
+app.use("/api/v1/recipients", recipientRoute);
 
 
 app.get("/", (req, res) => {

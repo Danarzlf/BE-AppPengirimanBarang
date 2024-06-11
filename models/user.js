@@ -17,7 +17,11 @@ const userSchema = new Schema({
   },
   resetPasswordToken: String,
   googleId: String,
-  userProfile: { type: Schema.Types.ObjectId, ref: 'UserProfile' }, // reference to UserProfile
+  userProfile: { type: Schema.Types.ObjectId, ref: 'UserProfile' } // reference to UserProfile
+}, {
+  shipment: { type: Schema.Types.ObjectId, ref: 'Shipment' } // reference to UserProfile
+}, {
+  timestamps: true
 });
 
 const User = mongoose.model('User', userSchema);

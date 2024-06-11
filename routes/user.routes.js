@@ -3,6 +3,7 @@ const checkRole = require("../middlewares/checkRole");
 const Auth = require("../middlewares/authentication");
 const {
   register,
+  registerNoVerify,
   verifyOtp,
   login,
   authenticateUser,
@@ -14,6 +15,7 @@ const {
 const router = express.Router();
 
 router.post("/register", register);
+router.post("/registerNoVerify", register);
 router.put("/verify-otp", verifyOtp);
 router.post("/login", login);
 router.get(

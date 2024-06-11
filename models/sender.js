@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const senderSchema = new Schema({
  
   name: { type: String, required: true },
+
   phoneNumber: { type: String, required: true },
   originCity: { type: String },
   postCode: { type: String },
@@ -16,7 +17,6 @@ const senderSchema = new Schema({
     type: Schema.Types.ObjectId, 
     ref: 'Dropoff' 
   },
-
 }, { timestamps: true });
 
 
