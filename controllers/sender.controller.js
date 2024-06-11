@@ -1,6 +1,6 @@
-const Sender = require('../models/Sender');
-const User = require('../models/User');
-const Shipment = require('../models/Shipment'); 
+const Sender = require('../models/sender');
+const User = require('../models/user');
+const Shipment = require('../models/shipment'); 
 
 const createSender = async (req, res, next) => {
     try {
