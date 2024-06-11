@@ -1,23 +1,22 @@
-const Sender = require("../models/sender");
+const Payment = require("../models/payment");
 const Shipment = require("../models/shipment");
 
-const createSender = async (req, res, next) => {
+const createPayment = async (req, res, next) => {
   try {
-    const { name, phoneNumber, originCity, postCode, address, shipmentId } =
-      req.body;
+    const { shipmentId, amount, payment_method } = req.body;
 
     // Validate required fields
-    if (!shipmentId || !name || !phoneNumber) {
+    if (!shipmentId || !amount || !payment_method) {
       return res.status(400).json({
         status: false,
-        message: "shipment ID, name, and phone number are required.",
+        message: "shipment ID, amount, and payment method are required.",
         data: null,
       });
     }
 
-    // Check if user exists
-    const existingUser = await Shipment.findById(shipmentId);
-    if (!existingUser) {
+    // Check if shipment exists
+    const existingShipment = await Shipment.findById(shipmentId);
+    if (!existingShipment) {
       return res.status(404).json({
         status: false,
         message: "shipment not found.",
@@ -25,37 +24,34 @@ const createSender = async (req, res, next) => {
       });
     }
 
-    // Create new sender record
-    const newSender = await Sender.create({
-      name,
-      phoneNumber,
-      originCity,
-      postCode,
-      address,
+    // Create new payment record
+    const newPayment = await Payment.create({
       shipmentId,
+      amount,
+      payment_method,
     });
 
     res.status(201).json({
       status: true,
-      message: "Sender created successfully",
-      data: newSender,
+      message: "Payment created successfully",
+      data: newPayment,
     });
   } catch (err) {
     next(err);
   }
 };
 
-const updateSender = async (req, res, next) => {
+const updatePayment = async (req, res, next) => {
   try {
-    const senderId = req.params.senderId; // Mengambil ID pengirim dari parameter rute
+    const paymentId = req.params.paymentId; // Mengambil ID pembayaran dari parameter rute
     const updateData = req.body; // Data baru untuk diperbarui
 
-    // Periksa apakah pengirim ada
-    const existingSender = await Sender.findById(senderId);
-    if (!existingSender) {
+    // Periksa apakah pembayaran ada
+    const existingPayment = await Payment.findById(paymentId);
+    if (!existingPayment) {
       return res.status(404).json({
         status: false,
-        message: "Sender not found.",
+        message: "Payment not found.",
         data: null,
       });
     }
@@ -73,15 +69,15 @@ const updateSender = async (req, res, next) => {
       }
     }
 
-    // Lakukan pembaruan pada pengirim
-    const updatedSender = await Sender.findByIdAndUpdate(senderId, updateData, {
+    // Lakukan pembaruan pada pembayaran
+    const updatedPayment = await Payment.findByIdAndUpdate(paymentId, updateData, {
       new: true,
     });
 
     res.status(200).json({
       status: true,
-      message: "Sender updated successfully",
-      data: updatedSender,
+      message: "Payment updated successfully",
+      data: updatedPayment,
     });
   } catch (err) {
     next(err);
@@ -89,6 +85,6 @@ const updateSender = async (req, res, next) => {
 };
 
 module.exports = {
-  createSender,
-  updateSender,
+  createPayment,
+  updatePayment,
 };

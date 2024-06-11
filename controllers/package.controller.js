@@ -1,23 +1,26 @@
-const Recipient = require("../models/recipient");
+const Package = require("../models/package");
 const Shipment = require("../models/shipment");
 
-const createRecipient = async (req, res, next) => {
+const createPackage = async (req, res, next) => {
   try {
     const {
-      name,
-      phoneNumber,
-      destinationCity,
-      postCode,
-      address,
+      type,
+      itemName,
+      quantity,
+      itemValue,
+      weight,
+      height,
+      width,
+      length,
+      remarks,
       shipmentId,
-      dropOffId,
     } = req.body;
 
     // Validate required fields
-    if (!shipmentId || !name || !phoneNumber) {
+    if (!shipmentId || !type || !itemName || !weight) {
       return res.status(400).json({
         status: false,
-        message: "Shipment ID, name, and phone number are required.",
+        message: "Shipment ID, type, item name, and weight are required.",
         data: null,
       });
     }
@@ -32,37 +35,41 @@ const createRecipient = async (req, res, next) => {
       });
     }
 
-    // Create new recipient record
-    const newRecipient = await Recipient.create({
-      name,
-      phoneNumber,
-      destinationCity,
-      postCode,
-      address,
+    // Create new package record
+    const newPackage = await Package.create({
+      type,
+      itemName,
+      quantity,
+      itemValue,
+      weight,
+      height,
+      width,
+      length,
+      remarks,
       shipmentId,
     });
 
     res.status(201).json({
       status: true,
-      message: "Recipient created successfully",
-      data: newRecipient,
+      message: "Package created successfully",
+      data: newPackage,
     });
   } catch (err) {
     next(err);
   }
 };
 
-const updateRecipient = async (req, res, next) => {
+const updatePackage = async (req, res, next) => {
   try {
-    const recipientId = req.params.recipientId; // Mengambil ID penerima dari parameter rute
+    const packageId = req.params.packageId; // Mengambil ID paket dari parameter rute
     const updateData = req.body; // Data baru untuk diperbarui
 
-    // Periksa apakah penerima ada
-    const existingRecipient = await Recipient.findById(recipientId);
-    if (!existingRecipient) {
+    // Periksa apakah paket ada
+    const existingPackage = await Package.findById(packageId);
+    if (!existingPackage) {
       return res.status(404).json({
         status: false,
-        message: "Recipient not found.",
+        message: "Package not found.",
         data: null,
       });
     }
@@ -80,17 +87,19 @@ const updateRecipient = async (req, res, next) => {
       }
     }
 
-    // Lakukan pembaruan pada penerima
-    const updatedRecipient = await Recipient.findByIdAndUpdate(
-      recipientId,
+    // Lakukan pembaruan pada paket
+    const updatedPackage = await Package.findByIdAndUpdate(
+      packageId,
       updateData,
-      { new: true }
+      {
+        new: true,
+      }
     );
 
     res.status(200).json({
       status: true,
-      message: "Recipient updated successfully",
-      data: updatedRecipient,
+      message: "Package updated successfully",
+      data: updatedPackage,
     });
   } catch (err) {
     next(err);
@@ -98,6 +107,6 @@ const updateRecipient = async (req, res, next) => {
 };
 
 module.exports = {
-  createRecipient,
-  updateRecipient,
+  createPackage,
+  updatePackage,
 };

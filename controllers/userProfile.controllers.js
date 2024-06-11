@@ -1,5 +1,5 @@
 const path = require("path");
-const User = require("../models/user");
+const User = require("../models/User");
 const UserProfile = require("../models/userprofile");
 
 module.exports = {
