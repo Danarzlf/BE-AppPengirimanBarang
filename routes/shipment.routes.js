@@ -3,7 +3,7 @@ const {
   createShipment,
   getShipmentById,
   deleteShipment,
-} = require("../controllers/Shipment.controller");
+} = require("../controllers/shipment.controller");
 
 const router = express.Router();
 
