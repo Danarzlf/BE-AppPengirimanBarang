@@ -10,7 +10,7 @@ const Payment = require("../models/payment");
 
 const createShipment = async (req, res, next) => {
   try {
-    const { userId, noTrack, type, status, courierId } = req.body;
+    const { userId, noTrack, type, status, courierId, serviceId } = req.body;
 
     // Validate required fields
     if (!userId || !type || !status) {
@@ -38,6 +38,7 @@ const createShipment = async (req, res, next) => {
       type,
       status,
       courierId,
+      serviceId,
     });
 
     res.status(201).json({
@@ -72,17 +73,6 @@ const getShipmentById = async (req, res, next) => {
       },
       {
         $lookup: {
-          from: "couriers",
-          localField: "_id",
-          foreignField: "shipmentId",
-          as: "courier",
-        },
-      },
-      {
-        $unwind: { path: "$courier", preserveNullAndEmptyArrays: true },
-      },
-      {
-        $lookup: {
           from: "recipients",
           localField: "_id",
           foreignField: "shipmentId",
@@ -92,7 +82,7 @@ const getShipmentById = async (req, res, next) => {
       {
         $unwind: { path: "$recipient", preserveNullAndEmptyArrays: true },
       },
-      // Tambahkan lookup package
+      // Lookup package
       {
         $lookup: {
           from: "packages",
@@ -101,16 +91,19 @@ const getShipmentById = async (req, res, next) => {
           as: "packages",
         },
       },
-      // Tambahkan lookup service
+      // Lookup service
       {
         $lookup: {
           from: "services",
-          localField: "_id",
-          foreignField: "shipmentId",
-          as: "services",
+          localField: "serviceId",
+          foreignField: "_id",
+          as: "service",
         },
       },
-      // Tambahkan lookup payment
+      {
+        $unwind: { path: "$service", preserveNullAndEmptyArrays: true },
+      },
+      // Lookup payment
       {
         $lookup: {
           from: "payments",
@@ -118,6 +111,18 @@ const getShipmentById = async (req, res, next) => {
           foreignField: "shipmentId",
           as: "payments",
         },
+      },
+      // Lookup courier
+      {
+        $lookup: {
+          from: "couriers",
+          localField: "courierId",
+          foreignField: "_id",
+          as: "courier",
+        },
+      },
+      {
+        $unwind: { path: "$courier", preserveNullAndEmptyArrays: true },
       },
     ]);
 
@@ -140,6 +145,8 @@ const getShipmentById = async (req, res, next) => {
     next(err);
   }
 };
+
+
 
 const deleteShipment = async (req, res, next) => {
   try {

@@ -15,7 +15,8 @@ const shipmentSchema = new Schema({
     required: true, 
     default: 'In Progress' 
   },
-  courierId: { type: String },
+  courierId: { type: Schema.Types.ObjectId, ref: 'Courier'},
+  serviceId: { type: Schema.Types.ObjectId, ref: 'Service'},
 }, { timestamps: true });
 
 const Shipment = mongoose.model('Shipment', shipmentSchema);

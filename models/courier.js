@@ -7,10 +7,6 @@ const courierSchema = new Schema(
       type: Number,
       primaryKey: true, // This isn't standard Mongoose. ObjectId is generally used as primary key.
     },
-    shipmentId: {
-      type: Schema.Types.ObjectId,
-      ref: "Shipment",
-    },
     name: {
       type: String,
       required: true,

@@ -4,10 +4,6 @@ const Schema = mongoose.Schema;
 
 const serviceSchema = new Schema(
   {
-    shipmentId: {
-      type: Schema.Types.ObjectId,
-      ref: "Shipment",
-    },
     nameServices: {
       type: String,
       required: true,

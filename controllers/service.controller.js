@@ -4,23 +4,13 @@ const Shipment = require("../models/shipment");
 
 const createService = async (req, res, next) => {
   try {
-    const { nameServices, price, description, shipmentId } = req.body;
+    const { nameServices, price, description} = req.body;
 
     // Validasi field yang diperlukan
-    if (!shipmentId || !nameServices || !price) {
+    if (!nameServices || !price) {
       return res.status(400).json({
         status: false,
         message: "Shipment ID, service name, and price are required.",
-        data: null,
-      });
-    }
-
-    // Periksa apakah pengiriman yang diminta ada
-    const existingShipment = await Shipment.findById(shipmentId);
-    if (!existingShipment) {
-      return res.status(404).json({
-        status: false,
-        message: "Shipment not found.",
         data: null,
       });
     }
@@ -30,7 +20,6 @@ const createService = async (req, res, next) => {
       nameServices,
       price,
       description,
-      shipmentId,
     });
 
     res.status(201).json({
@@ -48,8 +37,8 @@ const updateService = async (req, res, next) => {
     const serviceId = req.params.serviceId; // Mengambil ID layanan dari parameter rute
     const updateData = req.body; // Data baru untuk diperbarui
 
-    // Periksa apakah layanan ada
-    const existingService = await Service.findById(serviceId);
+    // Periksa apakah kurir ada
+    const existingService = await Service.findById(serviceIdId);
     if (!existingService) {
       return res.status(404).json({
         status: false,
@@ -58,18 +47,6 @@ const updateService = async (req, res, next) => {
       });
     }
 
-    // Periksa apakah ada perubahan yang diminta pada pengiriman terkait
-    if (updateData.shipmentId) {
-      // Periksa apakah pengiriman yang diminta ada
-      const existingShipment = await Shipment.findById(updateData.shipmentId);
-      if (!existingShipment) {
-        return res.status(404).json({
-          status: false,
-          message: "Shipment not found.",
-          data: null,
-        });
-      }
-    }
 
     // Lakukan pembaruan pada layanan
     const updatedService = await Service.findByIdAndUpdate(
