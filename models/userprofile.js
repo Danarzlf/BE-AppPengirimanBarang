@@ -29,6 +29,8 @@ const userProfileSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+}, {
+  timestamps: true // Menambahkan opsi timestamps
 });
 
 const UserProfile = mongoose.model('UserProfile', userProfileSchema);

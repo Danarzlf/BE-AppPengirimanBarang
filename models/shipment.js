@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const shipmentSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  noTrack: { type: String},
+  noTrack: { type: String, trim: true },
   type: {
     type: String,
     enum: ['PickUp', 'DropOff'],
@@ -13,10 +13,11 @@ const shipmentSchema = new Schema({
   status: { 
     type: String, 
     required: true, 
-    default: 'In Progress' 
+    default: 'In Progress',
+    trim: true
   },
-  courierId: { type: Schema.Types.ObjectId, ref: 'Courier'},
-  serviceId: { type: Schema.Types.ObjectId, ref: 'Service'},
+  courierId: { type: Schema.Types.ObjectId, ref: 'Courier' },
+  serviceId: { type: Schema.Types.ObjectId, ref: 'Service' },
 }, { timestamps: true });
 
 const Shipment = mongoose.model('Shipment', shipmentSchema);
