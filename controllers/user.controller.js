@@ -347,6 +347,7 @@ const verifyOtp = async (req, res, next) => {
         data: {
           user: {
             email: user.email, /* tambahkan properti lain jika diperlukan */
+            role: user.role
           },
           token,
         },
