@@ -3,10 +3,6 @@ const Schema = mongoose.Schema;
 
 const courierSchema = new Schema(
   {
-    id: {
-      type: Number,
-      primaryKey: true, // This isn't standard Mongoose. ObjectId is generally used as primary key.
-    },
     name: {
       type: String,
       required: true,
