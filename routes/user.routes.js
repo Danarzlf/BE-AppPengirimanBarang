@@ -21,6 +21,7 @@ router.post("/login", login);
 router.get(
   "/authenticate",
   Auth,
+  checkRole(["User", "Admin"]),
   authenticateUser
 );
 router.get("/all-users", Auth, checkRole(["User"]), getAllUsers);
