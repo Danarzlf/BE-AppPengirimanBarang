@@ -26,17 +26,17 @@ module.exports = async function (req, res, next) {
 
     const payload = jwt.verify(token, JWT_SECRET_KEY);
 
-    // const user = await User.findById(payload.id);
-    // if (!user) {
-    //   return res.status(401).json({
-    //     status: false,
-    //     message: "Tidak terautentikasi",
-    //     err: "Email tidak terdaftar",
-    //     data: null,
-    //   });
-    // }
+    const user = await User.findById(payload.id);
+    if (!user) {
+      return res.status(401).json({
+        status: false,
+        message: "Tidak terautentikasi",
+        err: "Email tidak terdaftar",
+        data: null,
+      });
+    }
 
-    // req.user = user;
+    req.user = user;
 
     // if (!req.user.isVerified) {
     //   return res.status(401).json({
