@@ -104,7 +104,23 @@ const updatePackage = async (req, res, next) => {
   }
 };
 
+const getAllPackages = async (req, res, next) => {
+  try {
+    // Mengambil semua paket dari koleksi Package
+    const packages = await Package.find();
+
+    res.status(200).json({
+      status: true,
+      message: "Packages retrieved successfully",
+      data: packages,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   createPackage,
   updatePackage,
+  getAllPackages
 };

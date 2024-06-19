@@ -97,7 +97,24 @@ const updateRecipient = async (req, res, next) => {
   }
 };
 
+
+const getAllRecipients = async (req, res, next) => {
+  try {
+    // Mengambil semua penerima dari koleksi Recipient
+    const recipients = await Recipient.find();
+
+    res.status(200).json({
+      status: true,
+      message: "Recipients retrieved successfully",
+      data: recipients,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   createRecipient,
   updateRecipient,
+  getAllRecipients
 };

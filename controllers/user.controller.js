@@ -517,6 +517,36 @@ const verifyOtp = async (req, res, next) => {
   //   }
   // };
 
+  const deleteUserById = async (req, res, next) => {
+    try {
+      const userId = req.params.id;
+  
+      // Check if the user exists
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({
+          status: false,
+          message: "User not found",
+          data: null,
+        });
+      }
+  
+      // Delete user profile
+      await UserProfile.findOneAndDelete({ userId });
+  
+      // Delete user
+      await User.findByIdAndDelete(userId);
+  
+      res.status(200).json({
+        status: true,
+        message: "User deleted successfully",
+        data: null,
+      });
+    } catch (err) {
+      next(err);
+    }
+  };
+
 module.exports = {
     register,
     registerNoVerify,
@@ -525,4 +555,5 @@ module.exports = {
     authenticateUser,
     getAllUsers,
     getUserById,
+    deleteUserById
   };

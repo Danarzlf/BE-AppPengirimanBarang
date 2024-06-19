@@ -89,8 +89,53 @@ const getServiceById = async (req, res, next) => {
   }
 };
 
+const getAllServices = async (req, res, next) => {
+  try {
+    // Mengambil semua layanan dari koleksi Service
+    const services = await Service.find();
+
+    res.status(200).json({
+      status: true,
+      message: "Services retrieved successfully",
+      data: services,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const deleteServiceById = async (req, res, next) => {
+  try {
+    const serviceId = req.params.serviceId; // Mengambil ID layanan dari parameter rute
+
+    // Periksa apakah layanan ada
+    const existingService = await Service.findById(serviceId);
+    if (!existingService) {
+      return res.status(404).json({
+        status: false,
+        message: "Service not found.",
+        data: null,
+      });
+    }
+
+    // Hapus layanan
+    await Service.findByIdAndDelete(serviceId);
+
+    res.status(200).json({
+      status: true,
+      message: "Service deleted successfully",
+      data: null,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
 module.exports = {
   createService,
   updateService,
   getServiceById,
+  getAllServices,
+  deleteServiceById
 };

@@ -84,7 +84,23 @@ const updatePayment = async (req, res, next) => {
   }
 };
 
+const getAllPayments = async (req, res, next) => {
+  try {
+    // Mengambil semua pembayaran dari koleksi Payment
+    const payments = await Payment.find();
+
+    res.status(200).json({
+      status: true,
+      message: "Payments retrieved successfully",
+      data: payments,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   createPayment,
   updatePayment,
+  getAllPayments
 };

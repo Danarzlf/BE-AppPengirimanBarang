@@ -9,6 +9,7 @@ const {
   authenticateUser,
   getAllUsers,
   getUserById,
+  deleteUserById
 
 } = require("../controllers/user.controller");
 
@@ -24,7 +25,8 @@ router.get(
   checkRole(["User", "Admin"]),
   authenticateUser
 );
-router.get("/all-users", Auth, checkRole(["User"]), getAllUsers);
+router.get("/all-users", getAllUsers);
 router.get("/:id",  getUserById);
+router.delete("/:id",  deleteUserById);
 
 module.exports = router;

@@ -89,9 +89,53 @@ const getCourierById = async (req, res, next) => {
   }
 };
 
+const getAllCouriers = async (req, res, next) => {
+  try {
+    // Mengambil semua kurir dari koleksi Courier
+    const couriers = await Courier.find();
+
+    res.status(200).json({
+      status: true,
+      message: "Couriers retrieved successfully",
+      data: couriers,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const deleteCourierById = async (req, res, next) => {
+  try {
+    const courierId = req.params.courierId; // Retrieve the courier ID from the route parameters
+
+    // Check if the courier exists
+    const existingCourier = await Courier.findById(courierId);
+    if (!existingCourier) {
+      return res.status(404).json({
+        status: false,
+        message: "Courier not found.",
+        data: null,
+      });
+    }
+
+    // Delete the courier
+    await Courier.findByIdAndDelete(courierId);
+
+    res.status(200).json({
+      status: true,
+      message: "Courier deleted successfully",
+      data: null,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 
 module.exports = {
   createCourier,
   updateCourier,
   getCourierById,
+  getAllCouriers,
+  deleteCourierById,
 };

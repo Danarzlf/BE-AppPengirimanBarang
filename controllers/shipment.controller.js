@@ -155,9 +155,6 @@ const deleteShipment = async (req, res, next) => {
     // Hapus data sender yang terkait
     await Sender.deleteMany({ shipmentId: shipmentId });
 
-    // Hapus data courier yang terkait
-    await Courier.deleteMany({ shipmentId: shipmentId });
-
     // Hapus data recipient yang terkait
     await Recipient.deleteMany({ shipmentId: shipmentId });
 
@@ -166,9 +163,6 @@ const deleteShipment = async (req, res, next) => {
 
     // Hapus data service yang terkait
     await Service.deleteMany({ shipmentId: shipmentId });
-
-    // Hapus data service yang terkait
-    await Payment.deleteMany({ shipmentId: shipmentId });
 
     // Hapus pengiriman berdasarkan ID
     const deletedShipment = await Shipment.findByIdAndDelete(shipmentId);
@@ -191,8 +185,89 @@ const deleteShipment = async (req, res, next) => {
   }
 };
 
+const getAllShipments = async (req, res, next) => {
+  try {
+    // Find all Shipments with related data
+    const shipments = await Shipment.aggregate([
+      {
+        $lookup: {
+          from: "senders",
+          localField: "_id",
+          foreignField: "shipmentId",
+          as: "sender",
+        },
+      },
+      {
+        $unwind: { path: "$sender", preserveNullAndEmptyArrays: true },
+      },
+      {
+        $lookup: {
+          from: "recipients",
+          localField: "_id",
+          foreignField: "shipmentId",
+          as: "recipient",
+        },
+      },
+      {
+        $unwind: { path: "$recipient", preserveNullAndEmptyArrays: true },
+      },
+      // Lookup package
+      {
+        $lookup: {
+          from: "packages",
+          localField: "_id",
+          foreignField: "shipmentId",
+          as: "packages",
+        },
+      },
+      // Lookup service
+      {
+        $lookup: {
+          from: "services",
+          localField: "serviceId",
+          foreignField: "_id",
+          as: "service",
+        },
+      },
+      {
+        $unwind: { path: "$service", preserveNullAndEmptyArrays: true },
+      },
+      // Lookup payment
+      {
+        $lookup: {
+          from: "payments",
+          localField: "_id",
+          foreignField: "shipmentId",
+          as: "payments",
+        },
+      },
+      // Lookup courier
+      {
+        $lookup: {
+          from: "couriers",
+          localField: "courierId",
+          foreignField: "_id",
+          as: "courier",
+        },
+      },
+      {
+        $unwind: { path: "$courier", preserveNullAndEmptyArrays: true },
+      },
+    ]);
+
+    res.status(200).json({
+      status: true,
+      message: "Shipments retrieved successfully.",
+      data: shipments,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   createShipment,
   getShipmentById,
   deleteShipment,
+  getAllShipments,
 };
