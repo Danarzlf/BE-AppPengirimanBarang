@@ -10,7 +10,7 @@ const Payment = require("../models/payment");
 
 const createShipment = async (req, res, next) => {
   try {
-    const { userId, noTrack, type, status, courierId, serviceId } = req.body;
+    const { userId, noTrack, type, status } = req.body;
 
     // Validate required fields
     if (!userId || !type) {
