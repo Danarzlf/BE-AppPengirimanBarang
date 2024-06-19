@@ -382,41 +382,49 @@ const verifyOtp = async (req, res, next) => {
   // };
 
   const authenticateUser = async (req, res, next) => {
-    try {
-      const userId = req.user.id;
-  
-      const userWithProfile = await User.aggregate([
-        { $match: { _id: new mongoose.Types.ObjectId(userId) } },
-        {
-          $lookup: {
-            from: "userprofiles",
-            localField: "_id",
-            foreignField: "userId",
-            as: "userProfile"
-          }
-        },
-        { $unwind: { path: "$userProfile", preserveNullAndEmptyArrays: true } },
-      ]);
-  
-      if (userWithProfile.length === 0) {
-        return res.status(404).json({
-          status: false,
-          message: "User not found",
-          data: null,
-        });
-      }
-  
-      const user = userWithProfile[0];
-  
-      return res.status(200).json({
-        status: true,
-        message: "Authentication successful",
-        data: { user },
+  try {
+    const userId = req.user.id;
+
+    const userWithProfileAndShipments = await User.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(userId) } },
+      {
+        $lookup: {
+          from: "userprofiles",
+          localField: "_id",
+          foreignField: "userId",
+          as: "userProfile"
+        }
+      },
+      { $unwind: { path: "$userProfile", preserveNullAndEmptyArrays: true } },
+      {
+        $lookup: {
+          from: "shipments", // Ganti dengan nama koleksi yang sesuai
+          localField: "_id",
+          foreignField: "userId",
+          as: "shipments"
+        }
+      },
+    ]);
+
+    if (userWithProfileAndShipments.length === 0) {
+      return res.status(404).json({
+        status: false,
+        message: "User not found",
+        data: null,
       });
-    } catch (err) {
-      next(err);
     }
-  };
+
+    const user = userWithProfileAndShipments[0];
+
+    return res.status(200).json({
+      status: true,
+      message: "Authentication successful",
+      data: { user },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
   
   const getAllUsers = async (req, res, next) => {
     try {
