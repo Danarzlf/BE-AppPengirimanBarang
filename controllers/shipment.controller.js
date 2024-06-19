@@ -37,8 +37,7 @@ const createShipment = async (req, res, next) => {
       noTrack,
       type,
       status,
-      courierId,
-      serviceId,
+     
     });
 
     res.status(201).json({
