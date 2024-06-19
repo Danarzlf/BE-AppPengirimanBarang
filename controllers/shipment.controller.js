@@ -13,7 +13,7 @@ const createShipment = async (req, res, next) => {
     const { userId, noTrack, type, status, courierId, serviceId } = req.body;
 
     // Validate required fields
-    if (!userId || !type || !status) {
+    if (!userId || !type) {
       return res.status(400).json({
         status: false,
         message: "All fields are required.",
