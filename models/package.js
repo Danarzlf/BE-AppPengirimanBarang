@@ -5,8 +5,6 @@ const packageSchema = new Schema(
   {
     type: {
       type: String,
-      enum: ["goods", "document"], // Ganti dengan daftar jenis yang sesuai
-      default: "goods",
     },
     itemName: {
       type: String,
