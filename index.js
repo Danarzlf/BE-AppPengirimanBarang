@@ -12,6 +12,7 @@ const recipientRoute = require("./routes/recipient.routes");
 const serviceRoute = require("./routes/service.routes");
 const packageRoute = require("./routes/package.routes");
 const paymentRoute = require("./routes/payment.routes");
+const shippingRoute = require("./routes/shipping.routes");
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use("/api/v1/recipients", recipientRoute);
 app.use("/api/v1/services", serviceRoute);
 app.use("/api/v1/packages", packageRoute);
 app.use("/api/v1/payments", paymentRoute);
+app.use("/api/v1/shippings", shippingRoute);
 
 app.get("/", (req, res) => {
   res.send("Welcome to server");

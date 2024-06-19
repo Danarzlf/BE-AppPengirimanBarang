@@ -265,9 +265,48 @@ const getAllShipments = async (req, res, next) => {
   }
 };
 
+const updateShipmentById = async (req, res, next) => {
+  try {
+    const shipmentId = req.params.id;
+    const { noTrack, type, status, courierId, serviceId } = req.body;
+
+
+
+    // Update shipment record
+    const updatedShipment = await Shipment.findByIdAndUpdate(
+      shipmentId,
+      {
+        noTrack,
+        type,
+        status,
+        courierId,
+        serviceId,
+      },
+      { new: true } // to return the updated shipment
+    );
+
+    if (!updatedShipment) {
+      return res.status(404).json({
+        status: false,
+        message: "Shipment not found.",
+        data: null,
+      });
+    }
+
+    res.status(200).json({
+      status: true,
+      message: "Shipment updated successfully",
+      data: updatedShipment,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   createShipment,
   getShipmentById,
   deleteShipment,
   getAllShipments,
+  updateShipmentById
 };
