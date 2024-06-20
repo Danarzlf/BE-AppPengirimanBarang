@@ -38,7 +38,7 @@ const updateService = async (req, res, next) => {
     const updateData = req.body; // Data baru untuk diperbarui
 
     // Periksa apakah kurir ada
-    const existingService = await Service.findById(serviceIdId);
+    const existingService = await Service.findById(serviceId);
     if (!existingService) {
       return res.status(404).json({
         status: false,
